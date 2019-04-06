@@ -6,6 +6,7 @@ import Snapshots from "./Snapshots/Snapshots";
 import Header from "./Header";
 import history from "../history";
 import Bills from "./Bills";
+import Knowledge from "./Knowledge";
 
 export default () => {
   return (
@@ -27,6 +28,7 @@ export default () => {
               component={TransactionDetail}
             />
             <Route path="/bills" exact component={Bills} />
+            <Route path="/knowledge-center" exact component={Knowledge} />
           </Switch>
         </div>
       </Router>

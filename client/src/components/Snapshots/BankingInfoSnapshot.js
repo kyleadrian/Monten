@@ -8,8 +8,8 @@ class BankingInfoSnapShot extends Component {
           <div className="header">Banking Information</div>
         </div>
         <div className="content">
-          <h4 className="ui sub header">Checking: $amount</h4>
-          <h4 className="ui sub header">Savings: $amount</h4>
+          <h4 className="ui sub header">Checking: $12,345.64</h4>
+          <h4 className="ui sub header">Savings: $43,569.12</h4>
         </div>
       </div>
     );

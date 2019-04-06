@@ -17,6 +17,9 @@ class Header extends Component {
         <Link to="/bills" className="item">
           Bills
         </Link>
+        <Link to="/knowledge-center" className="item">
+          Knowledge Center
+        </Link>
         <div className="right menu">
           <a href="##" className="ui item">
             Account Info
