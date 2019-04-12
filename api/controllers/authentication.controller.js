@@ -1,10 +1,25 @@
+const jwt = require("jwt-simple");
+const config = require("../config");
 const User = require("../models/users");
 
 module.exports = {
   // ES6 syntax signin: signin
-  signup
+  signup,
+  signin
 };
 
+// Create and token to send to the user for identification on succesful account creation
+const tokenForUser = user => {
+  const timestamp = new Date().getTime();
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
+};
+
+// Sign In
+function signin(req, res, next) {
+  res.send({ token: tokenForUser(req.user) });
+}
+
+// Sign Up
 function signup(req, res, next) {
   // Grab email and password off of req.body
   const { email } = req.body;
@@ -40,7 +55,7 @@ function signup(req, res, next) {
         return next(err);
       }
 
-      res.json(user);
+      res.json({ token: tokenForUser(user) });
     });
   });
 }
