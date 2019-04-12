@@ -1,10 +1,36 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 // TODO create function for when page is selected the active class gets addes `{active} item`
-// TODO
 
 class Header extends Component {
+  renderAuthLinks() {
+    if (!this.props.auth) {
+      return (
+        <Fragment>
+          <Link to="/signup" className="ui item">
+            Sign Up
+          </Link>
+          <Link to="/signin" className="ui item">
+            Sign In
+          </Link>
+        </Fragment>
+      );
+    } else {
+      return (
+        <Fragment>
+          <a href="##" className="ui item">
+            Account Info
+          </a>
+          <Link to="/signout" className="ui item">
+            Sign Out
+          </Link>
+        </Fragment>
+      );
+    }
+  }
+
   renderHeader = () => {
     return (
       <div className="ui menu">
@@ -20,11 +46,7 @@ class Header extends Component {
         <Link to="/knowledge-center" className="item">
           Knowledge Center
         </Link>
-        <div className="right menu">
-          <a href="##" className="ui item">
-            Account Info
-          </a>
-        </div>
+        <div className="right menu">{this.renderAuthLinks()}</div>
       </div>
     );
   };
@@ -34,4 +56,10 @@ class Header extends Component {
   }
 }
 
-export default Header;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth.isAuthenticated
+  };
+};
+
+export default connect(mapStateToProps)(Header);

@@ -1,2 +1,4 @@
 export const FETCH_TRANSACTIONS = "FETCH_TRANSACTIONS";
 export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
+export const AUTH_USER = "AUTH_USER";
+export const AUTH_ERROR = "AUTH_ERROR";

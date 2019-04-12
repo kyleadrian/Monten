@@ -7,6 +7,9 @@ import Header from "./Header";
 import history from "../history";
 import Bills from "./Bills";
 import Knowledge from "./Knowledge";
+import SignUp from "./auth/SignUp";
+import SignOut from "./auth/SignOut";
+import SignIn from "./auth/SignIn";
 
 export default () => {
   return (
@@ -29,6 +32,9 @@ export default () => {
             />
             <Route path="/bills" exact component={Bills} />
             <Route path="/knowledge-center" exact component={Knowledge} />
+            <Route path="/signup" exact component={SignUp} />
+            <Route path="/signout" exact component={SignOut} />
+            <Route path="/signin" exact component={SignIn} />
           </Switch>
         </div>
       </Router>

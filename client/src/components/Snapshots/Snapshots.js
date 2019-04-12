@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { fetchTransactions } from "../../actions";
 import { NetSpendSnapshot } from "./NetSpendSnapshot";
 import SpendCategorySnapshot from "./SpendCategorySnapshot";
 import BankingInfoSnapshot from "./BankingInfoSnapshot";
 import DateRange from "../DateRange";
 import Greeting from "../Greeting";
+import requireAuth from "../../requireAuth";
 import {
   calculateIncome,
   calculateExpenses,

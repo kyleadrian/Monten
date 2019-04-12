@@ -10,6 +10,9 @@ import reducers from "./reducers";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducers,
+  {
+    auth: { isAuthenticated: localStorage.getItem("token") } // PLEASE DO NOT FORGET TO SET INITIAL STATE FOR AUTHENTICATION
+  },
   composeEnhancers(applyMiddleware(reduxThunk))
 );
 
