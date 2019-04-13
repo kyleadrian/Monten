@@ -13,25 +13,25 @@ class DateRange extends Component {
           onClick={() => this.handleDateChange(dateRanges.todaysDate)}
           className="ui button"
         >
-          Day
+          D
         </button>
         <button
           onClick={() => this.handleDateChange(dateRanges.oneWeekAgo)}
           className="ui button"
         >
-          Week
+          W
         </button>
         <button
           onClick={() => this.handleDateChange(dateRanges.oneMonthAgo)}
           className="ui button"
         >
-          Month
+          M
         </button>
         <button
           onClick={() => this.handleDateChange(dateRanges.oneYearAgo)}
           className="ui button"
         >
-          Year
+          Y
         </button>
       </div>
     );

@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt-nodejs");
 // Define model or "framework" for the model
 const userSchema = new Schema({
+  firstName: String,
+  lastName: String,
   email: { type: String, unique: true, lowercase: true },
   password: String
 });

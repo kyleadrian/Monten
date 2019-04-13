@@ -5,6 +5,7 @@ import TransactionItem from "./TransactionItem";
 import Spinner from "../Spinner";
 import { fetchTransactions } from "../../actions";
 import Pagination from "../Pagination";
+import requireAuth from "../../requireAuth";
 
 // DON'T FORGET TO SPECIFY THIS. WHEN CALLING FUNCTIONS
 
@@ -124,4 +125,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { fetchTransactions }
-)(TransactionList);
+)(requireAuth(TransactionList));

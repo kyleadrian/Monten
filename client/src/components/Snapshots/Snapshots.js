@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
 import { fetchTransactions } from "../../actions";
 import { NetSpendSnapshot } from "./NetSpendSnapshot";
 import SpendCategorySnapshot from "./SpendCategorySnapshot";
@@ -37,16 +36,35 @@ class Snapshots extends Component {
 
     return (
       <div>
-        <Greeting />
-        <DateRange onDateRangeClick={this.handleDateChange} />
-        <NetSpendSnapshot
-          transactions={transactions}
-          income={income}
-          expenses={expenses}
-          net={net}
-        />
-        <SpendCategorySnapshot transactions={transactions} />
-        <BankingInfoSnapshot />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "10px "
+          }}
+        >
+          <Greeting name={this.props.name} />
+          <DateRange onDateRangeClick={this.handleDateChange} />
+        </div>
+        <div
+          className="ui stackable equal width grid"
+          style={{ marginTop: "10px" }}
+        >
+          <div className="column">
+            <BankingInfoSnapshot />
+          </div>
+          <div className="column">
+            <NetSpendSnapshot
+              transactions={transactions}
+              income={income}
+              expenses={expenses}
+              net={net}
+            />
+          </div>
+          <div className="column">
+            <SpendCategorySnapshot transactions={transactions} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -54,11 +72,12 @@ class Snapshots extends Component {
 
 const mapStateToProps = state => {
   return {
-    transactions: Object.values(state.transactions)
+    transactions: Object.values(state.transactions),
+    name: state.auth.name
   };
 };
 
 export default connect(
   mapStateToProps,
   { fetchTransactions }
-)(Snapshots);
+)(requireAuth(Snapshots));

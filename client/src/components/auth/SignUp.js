@@ -10,7 +10,7 @@ class SignUp extends Component {
 
   onSubmit = formProps => {
     this.props.signup(formProps, () => {
-      history.push("/");
+      history.push("/snapshots");
     });
   };
 
@@ -18,28 +18,63 @@ class SignUp extends Component {
     const { handleSubmit } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
-        <fieldset>
-          <label>Email</label>
-          <Field
-            name="email"
-            type="text"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
-        <fieldset>
-          <label>Password</label>
-          <Field
-            name="password"
-            type="password"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
-        <div>{this.props.errorMessage}</div>
-        <button>Sign Up</button>
-      </form>
+      <div
+        className="ui middle aligned center aligned grid"
+        style={{ marginTop: "10%" }}
+      >
+        <div>
+          <div className="content" style={{ marginBottom: "20px" }}>
+            <h1>Hi there! Let's get Started.</h1>
+          </div>
+          <form
+            onSubmit={handleSubmit(this.onSubmit)}
+            className="ui large form"
+          >
+            <div className="ui stacked segment">
+              <label>First Name</label>
+              <div>
+                <Field
+                  name="firstName"
+                  type="text"
+                  component="input"
+                  autoComplete="none"
+                />
+              </div>
+              <label>Last Name</label>
+              <div>
+                <Field
+                  name="lastName"
+                  type="text"
+                  component="input"
+                  autoComplete="none"
+                />
+              </div>
+
+              <label>Email</label>
+              <div>
+                <Field
+                  name="email"
+                  type="text"
+                  component="input"
+                  autoComplete="none"
+                />
+              </div>
+
+              <label>Password</label>
+              <Field
+                name="password"
+                type="password"
+                component="input"
+                autoComplete="none"
+              />
+            </div>
+            <div>{this.props.errorMessage}</div>
+            <button className="ui fluid large blue submit button">
+              Sign Up
+            </button>
+          </form>
+        </div>
+      </div>
     );
   }
 }

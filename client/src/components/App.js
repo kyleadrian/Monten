@@ -10,6 +10,7 @@ import Knowledge from "./Knowledge";
 import SignUp from "./auth/SignUp";
 import SignOut from "./auth/SignOut";
 import SignIn from "./auth/SignIn";
+import WelcomePage from "./WelcomePage";
 
 export default () => {
   return (
@@ -23,7 +24,8 @@ export default () => {
         </div>
         <div>
           <Switch>
-            <Route path="/" exact component={Snapshots} />
+            <Route path="/" exact component={WelcomePage} />
+            <Route path="/snapshots" exact component={Snapshots} />
             <Route path="/transactions" exact component={TransactionList} />
             <Route
               path="/transactions/:id"

@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { signout } from "../../actions";
+import history from "../../history";
 
 class SignOut extends Component {
   componentDidMount() {
-    this.props.signout();
+    this.props.signout(() => {
+      history.push("/");
+    });
   }
 
   render() {

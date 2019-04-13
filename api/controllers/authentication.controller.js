@@ -16,20 +16,34 @@ const tokenForUser = user => {
 
 // Sign In
 function signin(req, res, next) {
-  res.send({ token: tokenForUser(req.user) });
+  const { email } = req.body;
+
+  User.findOne({ email }, (err, existingUser) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!existingUser) {
+      return res.status(422).send({ error: "No user found" });
+    }
+    return res.send({
+      token: tokenForUser(req.user),
+      name: existingUser.firstName
+    });
+  });
 }
 
 // Sign Up
 function signup(req, res, next) {
   // Grab email and password off of req.body
+  const { firstName } = req.body;
+  const { lastName } = req.body;
   const { email } = req.body;
   const { password } = req.body;
 
   // Check to see that we actually HAVE an email or password
-  if (!email || !password) {
-    return res
-      .status(422)
-      .send({ error: "Please provide email and password." });
+  if (!email || !password || !firstName || !lastName) {
+    return res.status(422).send({ error: "Please provide all info" });
   }
 
   // If we do, we check to see if a user currently exists
@@ -45,6 +59,8 @@ function signup(req, res, next) {
 
     // Otherwise we create the user
     const user = new User({
+      firstName,
+      lastName,
       email,
       password
     });
@@ -55,7 +71,7 @@ function signup(req, res, next) {
         return next(err);
       }
 
-      res.json({ token: tokenForUser(user) });
+      res.json({ token: tokenForUser(user), name: user.firstName });
     });
   });
 }
