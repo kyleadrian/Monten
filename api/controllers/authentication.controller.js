@@ -1,6 +1,7 @@
 const jwt = require("jwt-simple");
 const config = require("../config");
 const User = require("../models/users");
+const Transaction = require("../models/transactionsModel");
 
 module.exports = {
   // ES6 syntax signin: signin
@@ -34,7 +35,7 @@ function signin(req, res, next) {
 }
 
 // Sign Up
-function signup(req, res, next) {
+async function signup(req, res, next) {
   // Grab email and password off of req.body
   const { firstName } = req.body;
   const { lastName } = req.body;

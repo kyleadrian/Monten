@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 const bcrypt = require("bcrypt-nodejs");
+const TransactionSchema = require("./transactionsSchema");
 // Define model or "framework" for the model
 const userSchema = new Schema({
   firstName: String,
   lastName: String,
   email: { type: String, unique: true, lowercase: true },
-  password: String
+  password: String,
+  transactions: [TransactionSchema]
 });
 
 userSchema.pre("save", async function(next) {

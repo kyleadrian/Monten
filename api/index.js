@@ -19,6 +19,7 @@ app.use(cors());
 
 // Routes
 app.use(require("./routes/authRoutes"));
+app.use(require("./routes/transactionRoutes"));
 
 // Server Setup
 const port = process.env.PORT || 4000;
