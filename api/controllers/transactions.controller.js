@@ -1,8 +1,11 @@
 const Transaction = require("../models/transactionsModel");
+const User = require("../models/users");
 
 module.exports = {
   createTransaction,
-  getTransactions
+  getAllTransactions,
+  getTransactionsByUser,
+  updateTransactionCategory
 };
 
 async function createTransaction(req, res, next) {
@@ -13,6 +16,7 @@ async function createTransaction(req, res, next) {
   const { transactionType } = req.body;
   const { category } = req.body;
   const { accountName } = req.body;
+  const userId = req.user.id;
 
   if (
     !date ||
@@ -39,6 +43,14 @@ async function createTransaction(req, res, next) {
 
   try {
     const newTransaction = await transaction.save();
+    await User.updateOne(
+      {
+        _id: userId
+      },
+      {
+        $push: { transactions: newTransaction }
+      }
+    );
 
     res.send({ newTransaction });
   } catch (err) {
@@ -46,11 +58,41 @@ async function createTransaction(req, res, next) {
   }
 }
 
-async function getTransactions(req, res, next) {
+async function getAllTransactions(req, res, next) {
   try {
     const transactions = await Transaction.find({});
 
     res.send(transactions);
+  } catch (err) {
+    res.status(422).send(err);
+  }
+}
+
+async function getTransactionsByUser(req, res, next) {
+  try {
+    const transactions = await Transaction.find({ _user: req.user.id });
+
+    res.send(transactions);
+  } catch (err) {
+    res.status(422).send(err);
+  }
+}
+
+async function updateTransactionCategory(req, res, next) {
+  const { transactionId } = req.params;
+  const { category } = req.body;
+
+  try {
+    await Transaction.updateOne(
+      {
+        _id: transactionId
+      },
+      {
+        $set: { category: category }
+      }
+    );
+
+    res.send({ message: `Updated category to "${category}"` });
   } catch (err) {
     res.status(422).send(err);
   }
