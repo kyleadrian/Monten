@@ -6,6 +6,7 @@ const transactionController = require("../controllers/transactions.controller");
 
 const requireAuth = passport.authenticate("jwt", { session: false });
 
+//CREATE A TRANSACTION
 transactionRouter.post(
   "/api/transactions",
   requireAuth,
@@ -18,12 +19,14 @@ transactionRouter.post(
   transactionController.getTransactions
 ); */
 
+//GET ALL TRANSACTIONS
 transactionRouter.get(
   "/api/transactions",
   requireAuth,
   transactionController.getTransactionsByUser
 );
 
+//UPDATE TRANSACTION
 transactionRouter.put(
   "/api/transactions/:transactionId/edit",
   transactionController.updateTransactionCategory

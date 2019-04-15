@@ -1,5 +1,5 @@
-import transactions from "../apis/transactions";
-import auth from "../apis/auth";
+import axios from "axios";
+
 import {
   FETCH_TRANSACTIONS,
   FETCH_TRANSACTION,
@@ -9,20 +9,20 @@ import {
 } from "./types";
 
 export const fetchTransactions = () => async dispatch => {
-  const response = await transactions.get("/transactions");
+  const response = await axios.get("/api/transactions");
 
   dispatch({ type: FETCH_TRANSACTIONS, payload: response.data });
 };
 
 export const fetchTransaction = id => async dispatch => {
-  const response = await transactions.get(`/transactions/${id}`);
+  const response = await axios.get(`/api/transactions/${id}`);
 
   dispatch({ type: FETCH_TRANSACTION, payload: response.data });
 };
 
 export const signup = (formProps, callback) => async dispatch => {
   try {
-    const response = await auth.post("/signup", formProps);
+    const response = await axios.post("/api/signup", formProps);
 
     dispatch({ type: AUTH_USER, payload: response.data.token });
     dispatch({ type: GET_NAME, payload: response.data.name });
@@ -36,7 +36,7 @@ export const signup = (formProps, callback) => async dispatch => {
 
 export const signin = (formProps, callback) => async dispatch => {
   try {
-    const response = await auth.post("/signin", formProps);
+    const response = await axios.post("/api/signin", formProps);
 
     dispatch({ type: AUTH_USER, payload: response.data.token });
     dispatch({ type: GET_NAME, payload: response.data.name });
