@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../apis/axios";
 
 import {
   FETCH_TRANSACTIONS,

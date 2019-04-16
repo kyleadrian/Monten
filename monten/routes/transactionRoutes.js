@@ -26,6 +26,13 @@ transactionRouter.get(
   transactionController.getTransactionsByUser
 );
 
+//GET TRANSCTION
+transactionRouter.get(
+  "/api/transactions/:transactionId",
+  requireAuth,
+  transactionController.getTransaction
+);
+
 //UPDATE TRANSACTION
 transactionRouter.put(
   "/api/transactions/:transactionId/edit",

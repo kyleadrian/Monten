@@ -4,6 +4,7 @@ const User = require("../models/users");
 module.exports = {
   createTransaction,
   getAllTransactions,
+  getTransaction,
   getTransactionsByUser,
   updateTransactionCategory
 };
@@ -63,6 +64,17 @@ async function getAllTransactions(req, res, next) {
     const transactions = await Transaction.find({});
 
     res.send(transactions);
+  } catch (err) {
+    res.status(422).send(err);
+  }
+}
+
+async function getTransaction(req, res, next) {
+  const { transactionId } = req.params;
+  try {
+    const transaction = await Transaction.find({ _id: transactionId });
+
+    res.send(transaction);
   } catch (err) {
     res.status(422).send(err);
   }

@@ -28,6 +28,8 @@ class Snapshots extends Component {
   render() {
     const { transactions } = this.props;
 
+    console.log(transactions);
+
     const income = calculateIncome(transactions, this.state.dateRange);
 
     const expenses = calculateExpenses(transactions, this.state.dateRange);

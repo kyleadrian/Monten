@@ -43,15 +43,15 @@ class TransactionList extends Component {
     const { currentTransactions } = this.state;
 
     return currentTransactions.map(
-      ({ date, description, category, amount, id }) => {
+      ({ date, description, category, amount, _id }) => {
         return (
           <TransactionItem
             date={date}
             description={description}
             category={category}
             amount={amount}
-            key={id}
-            id={id}
+            key={_id}
+            id={_id}
           />
         );
       }
