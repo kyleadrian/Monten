@@ -73,14 +73,13 @@ class TransactionList extends Component {
     const { currentTransactions } = this.state;
     const sortedArray = _.orderBy(currentTransactions, [key], [direction]);
     this.setState({ currentTransactions: sortedArray });
-    console.log(direction);
   };
 
   render() {
     const totalTransactions = this.props.transactions.length;
 
     if (totalTransactions === 0) {
-      return <Spinner />;
+      return <Spinner sectionName={"Transaction List"} />;
     }
 
     return (

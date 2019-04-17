@@ -57,7 +57,6 @@ class TransactionDetail extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps);
   return {
     transaction: state.transactions[ownProps.match.params.id]
   };

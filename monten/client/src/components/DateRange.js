@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { dateRanges } from "../helpers/netSpendHelper";
+import { dateRanges } from "../helpers/dateRangesHelper";
 
 class DateRange extends Component {
   handleDateChange = date => {
@@ -13,25 +13,25 @@ class DateRange extends Component {
           onClick={() => this.handleDateChange(dateRanges.todaysDate)}
           className="ui button"
         >
-          D
+          Day
         </button>
         <button
           onClick={() => this.handleDateChange(dateRanges.oneWeekAgo)}
           className="ui button"
         >
-          W
+          Week
         </button>
         <button
           onClick={() => this.handleDateChange(dateRanges.oneMonthAgo)}
           className="ui button"
         >
-          M
+          Month
         </button>
         <button
           onClick={() => this.handleDateChange(dateRanges.oneYearAgo)}
           className="ui button"
         >
-          Y
+          Year
         </button>
       </div>
     );

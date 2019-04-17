@@ -6,13 +6,14 @@ import SpendCategorySnapshot from "./SpendCategorySnapshot";
 import BankingInfoSnapshot from "./BankingInfoSnapshot";
 import DateRange from "../DateRange";
 import Greeting from "../Greeting";
+import Spinner from "../Spinner";
 import requireAuth from "../../requireAuth";
+import { dateRanges } from "../../helpers/dateRangesHelper";
 import {
   calculateIncome,
   calculateExpenses,
-  calculateNet,
-  dateRanges
-} from "../../helpers/netSpendHelper";
+  topSpendCategories
+} from "../../helpers/snapshotHelper";
 
 class Snapshots extends Component {
   componentDidMount() {
@@ -28,13 +29,15 @@ class Snapshots extends Component {
   render() {
     const { transactions } = this.props;
 
-    console.log(transactions);
-
+    if (transactions.length === 0) {
+      return <Spinner sectionName={"Snapshots"} />;
+    }
+    // SUPER SUPER IMPORTANT - DON"T START CALLING ANY LOGIC UNTIL THE ASYNC CALLS ARE FINISHED!
     const income = calculateIncome(transactions, this.state.dateRange);
-
     const expenses = calculateExpenses(transactions, this.state.dateRange);
+    const net = income - expenses;
 
-    const net = calculateNet(transactions);
+    const orderedCategories = topSpendCategories(transactions);
 
     return (
       <div>
@@ -57,14 +60,13 @@ class Snapshots extends Component {
           </div>
           <div className="column">
             <NetSpendSnapshot
-              transactions={transactions}
-              income={income}
-              expenses={expenses}
-              net={net}
+              income={income.toLocaleString()}
+              expenses={expenses.toLocaleString()}
+              net={net.toLocaleString()}
             />
           </div>
           <div className="column">
-            <SpendCategorySnapshot transactions={transactions} />
+            <SpendCategorySnapshot categories={orderedCategories} />
           </div>
         </div>
       </div>

@@ -7,13 +7,8 @@ class TransactionItem extends Component {
   renderActions = () => {
     return (
       <React.Fragment>
-        <Link>
-          <button
-            to={`/transactions/${this.props.id}`}
-            className="ui button primary"
-          >
-            Edit
-          </button>
+        <Link to={`/transactions/${this.props.id}`}>
+          <button className="ui button primary">Edit</button>
         </Link>
         <Link to={`/transactions/${this.props.id}`}>
           <button className="ui button">Details</button>
