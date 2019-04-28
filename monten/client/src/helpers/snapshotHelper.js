@@ -4,12 +4,12 @@ import moment from "moment";
 /**
  * NET SPEND HELPERS ==========================================================================================================================================
  */
-export const calculateIncome = (transactions, date) => {
+export const calculateIncome = (transactions, sortByDate) => {
   const income = _.chain(transactions)
     .filter(transaction => {
       if (
         transaction.category === "Paycheck" &&
-        moment(transaction.date).isAfter(date)
+        moment(transaction.date).isAfter(sortByDate)
       )
         return transaction;
     })
@@ -23,7 +23,7 @@ export const calculateIncome = (transactions, date) => {
   return income;
 };
 
-export const calculateExpenses = (transactions, date) => {
+export const calculateExpenses = (transactions, sortByDate) => {
   const totalSpent = _.chain(transactions)
     .reject(transaction => {
       if (
@@ -34,7 +34,7 @@ export const calculateExpenses = (transactions, date) => {
       }
     })
     .map(transaction => {
-      if (moment(transaction.date).isAfter(date)) {
+      if (moment(transaction.date).isAfter(sortByDate)) {
         return transaction.amount;
       }
     })
@@ -51,10 +51,57 @@ export const calculateExpenses = (transactions, date) => {
  * TOP SPEND HELPER
  */
 
-export const topSpendCategories = transactions => {
-  let currentCategory = null;
-  let count = 0;
-  const categoryCount = [];
+export const topSpendCategories = (transactions, sortByDate) => {
+  const categoryInfo = [];
+  const categoryAmount = [];
+
+  _.chain(transactions)
+    .filter(transaction => {
+      if (moment(transaction.date).isAfter(sortByDate)) {
+        return transaction;
+      }
+    })
+    .reject(({ category }) => {
+      // consider making the below an array to tighten up code and make more scalable. FOr instance if user is filtering, category can get pushed to array to exclude
+      if (
+        category === "Credit Card Payment" ||
+        category === "Transfer" ||
+        category === "ATM Fee" ||
+        category === "Paycheck" ||
+        category === "Income"
+      ) {
+        return category;
+      }
+    })
+    .sortBy("category")
+    .forEach(({ category, amount }) => {
+      categoryInfo.push({ category, amount });
+    })
+    .value();
+
+  _.chain(categoryInfo)
+    .reduce((totalAmount, { category, amount }) => {
+      if (!totalAmount[category]) {
+        totalAmount[category] = { category: category, amount: 0 };
+        categoryAmount.push(totalAmount[category]);
+      }
+      totalAmount[category].amount += amount;
+      return totalAmount;
+    }, {})
+    .value();
+
+  const sortedAmount = _.chain(categoryAmount)
+    .orderBy("amount", "desc")
+    .value();
+
+  return sortedAmount;
+};
+
+/* let currentCategory = null;
+let count = 0;
+const categoryCount = [];
+export const topSpendCategories = (transactions, sortByDate) => {
+  const categoryInfo = [];
 
   _.chain(transactions)
     .map(({ category }) => {
@@ -72,20 +119,38 @@ export const topSpendCategories = transactions => {
         currentCategory = category;
         count = 1;
       } else {
-        count++;
-      }
-    })
-    .value();
+        count++; */
 
-  const categoriesWithoutCreditCardPaymentsAndTransfers = _.chain(categoryCount)
+/* export const topSpendCategories = (transactions, prevDate) => {
+  const categoryCount = [];
+
+  _.chain(transactions)
     .reject(({ category }) => {
-      if (category === "Credit Card Payment" || category === "Transfer") {
+      if (
+        category === "Credit Card Payment" ||
+        category === "Transfer" ||
+        category === "Uncategorized"
+      ) {
         return category;
       }
     })
-    .orderBy("count", "desc")
-    .slice(0, 3)
+    .forEach(({ amount, category, date }) => {
+      if (moment(date).isAfter(prevDate)) {
+        categoryCount.push({
+          category,
+          amount
+        });
+      }
+    })
     .value();
 
-  return categoriesWithoutCreditCardPaymentsAndTransfers;
-};
+  const arrayOfCategories = _.chain(categoryCount)
+    .countBy("category")
+    .keys()
+    .map(key => {
+      return { category: key, count: categoryCount[key] };
+    })
+    .value();
+
+  console.log(arrayOfCategories);
+} */

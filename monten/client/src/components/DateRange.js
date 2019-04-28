@@ -8,7 +8,7 @@ class DateRange extends Component {
 
   render() {
     return (
-      <div className="ui buttons">
+      <div className="ui buttons" style={{ marginTop: "10px" }}>
         <button
           onClick={() => this.handleDateChange(dateRanges.todaysDate)}
           className="ui button"

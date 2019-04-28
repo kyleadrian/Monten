@@ -7,6 +7,8 @@ import BankingInfoSnapshot from "./BankingInfoSnapshot";
 import DateRange from "../DateRange";
 import Greeting from "../Greeting";
 import Spinner from "../Spinner";
+import PieChart from "../Charts/PieChart";
+import LineChart from "../Charts/LineChart";
 import requireAuth from "../../requireAuth";
 import { dateRanges } from "../../helpers/dateRangesHelper";
 import {
@@ -37,24 +39,23 @@ class Snapshots extends Component {
     const expenses = calculateExpenses(transactions, this.state.dateRange);
     const net = income - expenses;
 
-    const orderedCategories = topSpendCategories(transactions);
+    const orderedCategories = topSpendCategories(
+      transactions,
+      this.state.dateRange
+    );
 
     return (
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "10px "
-          }}
-        >
-          <Greeting name={this.props.name} />
-          <DateRange onDateRangeClick={this.handleDateChange} />
+      <div className="ui grid">
+        <div className="two column row">
+          <div className="left aligned column">
+            <Greeting name={this.props.name} />
+          </div>
+          <div className="right aligned column">
+            <DateRange onDateRangeClick={this.handleDateChange} />
+          </div>
         </div>
-        <div
-          className="ui stackable equal width grid"
-          style={{ marginTop: "10px" }}
-        >
+
+        <div className="three column row">
           <div className="column">
             <BankingInfoSnapshot />
           </div>
@@ -67,6 +68,12 @@ class Snapshots extends Component {
           </div>
           <div className="column">
             <SpendCategorySnapshot categories={orderedCategories} />
+          </div>
+        </div>
+
+        <div>
+          <div className="column">
+            <PieChart data={orderedCategories} />
           </div>
         </div>
       </div>

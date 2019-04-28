@@ -15,7 +15,8 @@ class TransactionList extends Component {
   state = {
     currentTransactions: [],
     currentPage: null,
-    totalPages: null
+    totalPages: null,
+    searchTerm: ""
   };
 
   componentDidMount() {
@@ -24,6 +25,7 @@ class TransactionList extends Component {
 
   onPageChanged = data => {
     const { transactions } = this.props;
+
     const { currentPage, totalPages, pageLimit } = data;
 
     //The offset value indicates the starting index for fetching the records for the current page. Using (currentPage - 1) ensures that the offset is zero-based.
@@ -75,6 +77,11 @@ class TransactionList extends Component {
     this.setState({ currentTransactions: sortedArray });
   };
 
+  handleSearchInput = event => {
+    this.setState({ searchTerm: event.target.value });
+    console.log(this.state.searchTerm);
+  };
+
   render() {
     const totalTransactions = this.props.transactions.length;
 
@@ -84,10 +91,27 @@ class TransactionList extends Component {
 
     return (
       <div>
-        <h2 style={{ marginTop: "10px" }}>
-          <strong className="text-secondary">{totalTransactions}</strong>
-          &nbsp; Transactions
-        </h2>
+        <div className="ui grid">
+          <div className="left floated four wide column">
+            <h2 style={{ marginTop: "10px" }}>
+              <strong className="text-secondary">{totalTransactions}</strong>
+              &nbsp; Transactions
+            </h2>
+          </div>
+          <div className="right floated four wide column">
+            <div className="ui search" style={{ marginTop: "10px" }}>
+              <div className="ui icon input">
+                <input
+                  className="prompt"
+                  type="text"
+                  placeholder="Search transactions..."
+                  onChange={this.handleSearchInput}
+                />
+                <i className="search icon" />
+              </div>
+            </div>
+          </div>
+        </div>
         <table className="ui celled table">
           <thead>
             <tr>
