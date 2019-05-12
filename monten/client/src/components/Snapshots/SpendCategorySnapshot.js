@@ -2,7 +2,9 @@ import React, { Component } from "react";
 
 class SpendCategorySnapshot extends Component {
   renderCategories = () => {
-    return this.props.categories.splice(0, 3).map((transaction, index) => {
+    const categories = [...this.props.categories];
+
+    return categories.splice(0, 3).map((transaction, index) => {
       return (
         <h4 className="ui sub header" key={transaction.category}>
           {1 + index++}: {transaction.category}

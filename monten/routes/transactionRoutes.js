@@ -13,20 +13,20 @@ transactionRouter.post(
   transactionController.createTransaction
 );
 
+//GET ALL TRANSACTIONS -
+//----- Hidden API --------//
 /* transactionRouter.get(
-  "/transactions",
-  requireAuth,
-  transactionController.getTransactions
-); */
-
-//GET ALL TRANSACTIONS
-transactionRouter.get(
   "/api/transactions",
   requireAuth,
   transactionController.getTransactionsByUser
+); */
+transactionRouter.get(
+  "/api/transactions",
+  requireAuth,
+  transactionController.getUserTransactions
 );
 
-//GET TRANSCTION
+//GET A TRANSACTION
 transactionRouter.get(
   "/api/transactions/:transactionId",
   requireAuth,

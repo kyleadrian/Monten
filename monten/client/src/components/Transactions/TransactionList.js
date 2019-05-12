@@ -43,6 +43,7 @@ class TransactionList extends Component {
 
   renderTransactions() {
     const { currentTransactions } = this.state;
+    console.log(currentTransactions);
 
     return currentTransactions.map(
       ({ date, description, category, amount, _id }) => {

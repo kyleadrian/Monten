@@ -5,8 +5,8 @@ module.exports = {
   createTransaction,
   getAllTransactions,
   getTransaction,
-  getTransactionsByUser,
-  updateTransactionCategory
+  updateTransactionCategory,
+  getUserTransactions
 };
 
 async function createTransaction(req, res, next) {
@@ -17,7 +17,7 @@ async function createTransaction(req, res, next) {
   const { transactionType } = req.body;
   const { category } = req.body;
   const { accountName } = req.body;
-  const userId = req.user.id;
+  const owner = req.user.id;
 
   if (
     !date ||
@@ -39,19 +39,11 @@ async function createTransaction(req, res, next) {
     transactionType,
     category,
     accountName,
-    _user: req.user.id
+    owner
   });
 
   try {
     const newTransaction = await transaction.save();
-    await User.updateOne(
-      {
-        _id: userId
-      },
-      {
-        $push: { transactions: newTransaction }
-      }
-    );
 
     res.send({ newTransaction });
   } catch (err) {
@@ -80,11 +72,13 @@ async function getTransaction(req, res, next) {
   }
 }
 
-async function getTransactionsByUser(req, res, next) {
-  try {
-    const transactions = await Transaction.find({ _user: req.user.id });
+async function getUserTransactions(req, res, next) {
+  const { id } = req.user;
 
-    res.send(transactions);
+  try {
+    const user = await User.find({ _id: id }).populate("transactions");
+
+    res.send(user[0].transactions);
   } catch (err) {
     res.status(422).send(err);
   }
