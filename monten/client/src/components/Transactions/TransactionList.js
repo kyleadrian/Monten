@@ -16,7 +16,8 @@ class TransactionList extends Component {
     currentTransactions: [],
     currentPage: null,
     totalPages: null,
-    searchTerm: ""
+    searchTerm: "",
+    filteredTransactions: undefined
   };
 
   componentDidMount() {
@@ -24,6 +25,25 @@ class TransactionList extends Component {
   }
 
   onPageChanged = data => {
+    if (this.state.filteredTransactions) {
+      const { filteredTransactions } = this.state;
+
+      const { currentPage, totalPages, pageLimit } = data;
+
+      const offset = (currentPage - 1) * pageLimit;
+
+      const currentTransactions = filteredTransactions.slice(
+        offset,
+        offset + pageLimit
+      );
+
+      this.setState({
+        currentPage,
+        currentTransactions,
+        totalPages
+      });
+    }
+
     const { transactions } = this.props;
 
     const { currentPage, totalPages, pageLimit } = data;
@@ -40,26 +60,6 @@ class TransactionList extends Component {
       totalPages
     });
   };
-
-  renderTransactions() {
-    const { currentTransactions } = this.state;
-    console.log(currentTransactions);
-
-    return currentTransactions.map(
-      ({ date, description, category, amount, _id }) => {
-        return (
-          <TransactionItem
-            date={date}
-            description={description}
-            category={category}
-            amount={amount}
-            key={_id}
-            id={_id}
-          />
-        );
-      }
-    );
-  }
 
   handleSort = key => {
     const changeDirection = () => {
@@ -80,11 +80,73 @@ class TransactionList extends Component {
 
   handleSearchInput = event => {
     this.setState({ searchTerm: event.target.value });
-    console.log(this.state.searchTerm);
+    this.filterTransactions();
+    console.log(this.state.filteredTransactions);
   };
 
+  filterTransactions() {
+    let filteredTransactions = [];
+    this.props.transactions.forEach(transaction => {
+      if (
+        transaction.description
+          .toLowerCase()
+          .includes(this.state.searchTerm.toLowerCase()) ||
+        transaction.category
+          .toLowerCase()
+          .includes(this.state.searchTerm.toLowerCase())
+      )
+        filteredTransactions.push(transaction);
+    });
+
+    this.setState({ filteredTransactions });
+  }
+
+  renderAllTransactions() {
+    const { currentTransactions } = this.state;
+
+    return currentTransactions.map(
+      ({ date, description, category, amount, _id }) => {
+        return (
+          <TransactionItem
+            date={date}
+            description={description}
+            category={category}
+            amount={amount}
+            key={_id}
+            id={_id}
+          />
+        );
+      }
+    );
+  }
+
+  renderFilteredTransactions() {
+    const { filteredTransactions } = this.state;
+
+    if (filteredTransactions.length === 0) {
+      return <h1 style={{ textAlign: "center" }}>No Transactions Found :(</h1>;
+    }
+
+    return filteredTransactions.map(
+      ({ date, description, category, amount, _id }) => {
+        return (
+          <TransactionItem
+            date={date}
+            description={description}
+            category={category}
+            amount={amount}
+            key={_id}
+            id={_id}
+          />
+        );
+      }
+    );
+  }
+
   render() {
-    const totalTransactions = this.props.transactions.length;
+    const totalTransactions = this.state.filteredTransactions
+      ? this.state.filteredTransactions.length
+      : this.props.transactions.length;
 
     if (totalTransactions === 0) {
       return <Spinner sectionName={"Transaction List"} />;
@@ -125,7 +187,11 @@ class TransactionList extends Component {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>{this.renderTransactions()}</tbody>
+          <tbody>
+            {this.state.searchTerm
+              ? this.renderFilteredTransactions()
+              : this.renderAllTransactions()}
+          </tbody>
         </table>
         <div>
           <Pagination
