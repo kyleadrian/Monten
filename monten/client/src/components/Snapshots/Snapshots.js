@@ -63,7 +63,7 @@ class Snapshots extends Component {
             <NetSpendSnapshot
               income={income.toLocaleString()}
               expenses={expenses.toLocaleString()}
-              net={net.toLocaleString()}
+              net={net}
             />
           </div>
           <div className="column">

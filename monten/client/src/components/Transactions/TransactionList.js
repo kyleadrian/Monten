@@ -20,30 +20,28 @@ class TransactionList extends Component {
     filteredTransactions: undefined
   };
 
+  componentWillMount() {
+    if (this.props.match.params.category) {
+      let filteredTransactions = [];
+
+      this.props.transactions.forEach(transaction => {
+        if (
+          transaction.category
+            .toLowerCase()
+            .includes(this.props.match.params.category.toLowerCase())
+        )
+          filteredTransactions.push(transaction);
+      });
+
+      this.setState({ filteredTransactions });
+    }
+  }
+
   componentDidMount() {
     this.props.fetchTransactions();
   }
 
   onPageChanged = data => {
-    if (this.state.filteredTransactions) {
-      const { filteredTransactions } = this.state;
-
-      const { currentPage, totalPages, pageLimit } = data;
-
-      const offset = (currentPage - 1) * pageLimit;
-
-      const currentTransactions = filteredTransactions.slice(
-        offset,
-        offset + pageLimit
-      );
-
-      this.setState({
-        currentPage,
-        currentTransactions,
-        totalPages
-      });
-    }
-
     const { transactions } = this.props;
 
     const { currentPage, totalPages, pageLimit } = data;
@@ -102,6 +100,25 @@ class TransactionList extends Component {
   }
 
   renderAllTransactions() {
+    if (this.props.match.params.category) {
+      const { filteredTransactions } = this.state;
+
+      return filteredTransactions.map(
+        ({ date, description, category, amount, _id }) => {
+          return (
+            <TransactionItem
+              date={date}
+              description={description}
+              category={category}
+              amount={amount}
+              key={_id}
+              id={_id}
+            />
+          );
+        }
+      );
+    }
+
     const { currentTransactions } = this.state;
 
     return currentTransactions.map(
@@ -144,9 +161,7 @@ class TransactionList extends Component {
   }
 
   render() {
-    const totalTransactions = this.state.filteredTransactions
-      ? this.state.filteredTransactions.length
-      : this.props.transactions.length;
+    const totalTransactions = this.props.transactions.length;
 
     if (totalTransactions === 0) {
       return <Spinner sectionName={"Transaction List"} />;

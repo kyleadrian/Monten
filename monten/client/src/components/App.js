@@ -28,6 +28,11 @@ export default () => {
             <Route path="/snapshots" exact component={Snapshots} />
             <Route path="/transactions" exact component={TransactionList} />
             <Route
+              path="/transactions/:category"
+              exact
+              component={TransactionList}
+            />
+            <Route
               path="/transactions/:id"
               exact
               component={TransactionDetail}

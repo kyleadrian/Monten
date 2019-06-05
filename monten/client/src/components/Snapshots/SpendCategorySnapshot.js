@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 class SpendCategorySnapshot extends Component {
   renderCategories = () => {
@@ -7,7 +8,9 @@ class SpendCategorySnapshot extends Component {
     return categories.splice(0, 3).map((transaction, index) => {
       return (
         <h4 className="ui sub header" key={transaction.category}>
-          {1 + index++}: {transaction.category}
+          <Link to={`/transactions/${transaction.category}`}>
+            {1 + index++}: {transaction.category}
+          </Link>
         </h4>
       );
     });

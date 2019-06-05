@@ -10,12 +10,6 @@ class DateRange extends Component {
     return (
       <div className="ui buttons" style={{ marginTop: "10px" }}>
         <button
-          onClick={() => this.handleDateChange(dateRanges.todaysDate)}
-          className="ui button"
-        >
-          Day
-        </button>
-        <button
           onClick={() => this.handleDateChange(dateRanges.oneWeekAgo)}
           className="ui button"
         >
