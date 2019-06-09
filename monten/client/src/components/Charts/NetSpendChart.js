@@ -57,7 +57,8 @@ const data = [
 export default class Example extends Component {
   render() {
     return (
-      <LineChart
+      <div>Net Spend Chart</div>
+      /* <LineChart
         width={500}
         height={300}
         data={data}
@@ -80,7 +81,7 @@ export default class Example extends Component {
           activeDot={{ r: 8 }}
         />
         <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-      </LineChart>
+      </LineChart> */
     );
   }
 }

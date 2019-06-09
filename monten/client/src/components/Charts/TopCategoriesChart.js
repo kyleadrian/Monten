@@ -8,7 +8,8 @@ export default class Example extends Component {
     const { data } = this.props;
 
     return (
-      <PieChart width={1000} height={1000}>
+      <div>Top Spending Categories Chart</div>
+      /* <PieChart width={1000} height={1000}>
         <Pie
           data={data}
           cx={200}
@@ -22,7 +23,7 @@ export default class Example extends Component {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-      </PieChart>
+      </PieChart> */
     );
   }
 }

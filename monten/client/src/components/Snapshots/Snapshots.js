@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchTransactions } from "../../actions";
-import { NetSpendSnapshot } from "./NetSpendSnapshot";
+import NetSpendSnapshot from "./NetSpendSnapshot";
 import SpendCategorySnapshot from "./SpendCategorySnapshot";
 import BankingInfoSnapshot from "./BankingInfoSnapshot";
 import DateRange from "../DateRange";
 import Greeting from "../Greeting";
 import Spinner from "../Spinner";
-import PieChart from "../Charts/PieChart";
-import LineChart from "../Charts/LineChart";
+import TopCategoriesChart from "../Charts/TopCategoriesChart";
+import NetSpendChart from "../Charts/NetSpendChart";
+import BankingInformationChart from "../Charts/BankingInformationChart";
 import requireAuth from "../../requireAuth";
 import { dateRanges } from "../../helpers/dateRangesHelper";
 import {
@@ -20,13 +21,22 @@ import {
 class Snapshots extends Component {
   componentDidMount() {
     this.props.fetchTransactions();
+    console.log(this.props.isShown);
   }
 
-  state = { dateRange: dateRanges.oneMonthAgo };
-
-  handleDateChange = date => {
-    this.setState({ dateRange: date });
+  state = {
+    dateRange: dateRanges.oneMonthAgo
   };
+
+  renderCharts() {
+    if (this.props.isShown.isBankInfoChartShown) {
+      return <BankingInformationChart />;
+    } else if (this.props.isShown.isNetSpendChartShown) {
+      return <NetSpendChart />;
+    } else if (this.props.isShown.isTopCategoriesChartShown) {
+      return <TopCategoriesChart />;
+    }
+  }
 
   render() {
     const { transactions } = this.props;
@@ -72,9 +82,7 @@ class Snapshots extends Component {
         </div>
 
         <div>
-          <div className="column">
-            <PieChart data={orderedCategories} />
-          </div>
+          <div className="column">{this.renderCharts()}</div>
         </div>
       </div>
     );
@@ -84,7 +92,8 @@ class Snapshots extends Component {
 const mapStateToProps = state => {
   return {
     transactions: Object.values(state.transactions),
-    name: state.auth.name
+    name: state.auth.name,
+    isShown: state.charts
   };
 };
 

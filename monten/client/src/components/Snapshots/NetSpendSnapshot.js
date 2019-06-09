@@ -1,24 +1,57 @@
-import React, { Fragment } from "react";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import {
+  showBankInfoChart,
+  showNetSpendChart,
+  showTopCategoriesChart
+} from "../../actions";
 
-export const NetSpendSnapshot = props => {
-  console.log(Number(props.net));
-  return (
-    <Fragment>
-      <div className="ui card">
-        <div className="content">
-          <div className="header">Net Spend</div>
+class NetSpendSnapshot extends Component {
+  handleShowNetSpendChart = () => {
+    if (!this.props.isShown.isNetSpendChartShown) {
+      this.props.showNetSpendChart(true);
+      this.props.showTopCategoriesChart(false);
+      this.props.showBankInfoChart(false);
+    }
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <div className="ui card">
+          <div className="content">
+            <div
+              className="header"
+              onClick={() => {
+                this.handleShowNetSpendChart();
+              }}
+            >
+              Net Spend
+            </div>
+          </div>
+          <div className="content">
+            <h4 className="ui sub header">Income: ${this.props.income}</h4>
+            <h4 className="ui sub header">Spent: ${this.props.expenses}</h4>
+            <h4
+              className="ui sub header"
+              style={{ color: `${this.props.net < 0 ? "red" : "green"}` }}
+            >
+              Net: ${this.props.net} $
+            </h4>
+          </div>
         </div>
-        <div className="content">
-          <h4 className="ui sub header">Income: ${props.income}</h4>
-          <h4 className="ui sub header">Spent: ${props.expenses}</h4>
-          <h4
-            className="ui sub header"
-            style={{ color: `${props.net < 0 ? "red" : "green"}` }}
-          >
-            Net: ${props.net} $
-          </h4>
-        </div>
-      </div>
-    </Fragment>
-  );
+      </Fragment>
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    isShown: state.charts
+  };
 };
+
+export default connect(
+  mapStateToProps,
+  { showBankInfoChart, showNetSpendChart, showTopCategoriesChart }
+)(NetSpendSnapshot);

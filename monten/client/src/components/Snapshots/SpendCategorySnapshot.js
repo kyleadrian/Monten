@@ -1,7 +1,21 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import {
+  showBankInfoChart,
+  showNetSpendChart,
+  showTopCategoriesChart
+} from "../../actions";
 
 class SpendCategorySnapshot extends Component {
+  handleShowTopCategoriesChart = () => {
+    if (!this.props.isShown.isTopCategoriesChartShown) {
+      this.props.showTopCategoriesChart(true);
+      this.props.showBankInfoChart(false);
+      this.props.showNetSpendChart(false);
+    }
+  };
+
   renderCategories = () => {
     const categories = [...this.props.categories];
 
@@ -20,7 +34,9 @@ class SpendCategorySnapshot extends Component {
     return (
       <div className="ui card">
         <div className="content">
-          <div className="header">Top Spending Categories</div>
+          <div className="header" onClick={this.handleShowTopCategoriesChart}>
+            Top Spending Categories
+          </div>
         </div>
         <div className="content">{this.renderCategories()}</div>
       </div>
@@ -28,4 +44,13 @@ class SpendCategorySnapshot extends Component {
   }
 }
 
-export default SpendCategorySnapshot;
+const mapStateToProps = state => {
+  return {
+    isShown: state.charts
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { showBankInfoChart, showNetSpendChart, showTopCategoriesChart }
+)(SpendCategorySnapshot);

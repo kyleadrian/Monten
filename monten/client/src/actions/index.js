@@ -5,7 +5,10 @@ import {
   FETCH_TRANSACTION,
   AUTH_USER,
   AUTH_ERROR,
-  GET_NAME
+  GET_NAME,
+  SHOW_BANKINFOCHART,
+  SHOW_NETSPENDCHART,
+  SHOW_TOPCATEGORIESCHART
 } from "./types";
 
 export const fetchTransactions = () => async dispatch => {
@@ -55,4 +58,16 @@ export const signout = callback => dispatch => {
 
   dispatch({ type: AUTH_USER, payload: "" });
   dispatch({ type: GET_NAME, payload: "" });
+};
+
+export const showBankInfoChart = state => dispatch => {
+  dispatch({ type: SHOW_BANKINFOCHART, payload: state });
+};
+
+export const showNetSpendChart = state => dispatch => {
+  dispatch({ type: SHOW_NETSPENDCHART, payload: state });
+};
+
+export const showTopCategoriesChart = state => dispatch => {
+  dispatch({ type: SHOW_TOPCATEGORIESCHART, payload: state });
 };
