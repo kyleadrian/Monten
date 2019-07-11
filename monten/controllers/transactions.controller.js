@@ -47,8 +47,8 @@ async function createTransaction(req, res, next) {
 
     await User.findOne({ _id: owner }, (err, user) => {
       user.transactions.push(newTransaction);
-      user.save()
-    })
+      user.save();
+    });
 
     res.send({ newTransaction });
   } catch (err) {
@@ -79,7 +79,7 @@ async function getTransaction(req, res, next) {
 
 async function getUserTransactions(req, res, next) {
   const { id } = req.user;
-  console.log( id);
+
   try {
     const user = await User.find({ _id: id }).populate("transactions");
 

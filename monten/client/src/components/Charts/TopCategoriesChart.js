@@ -3,13 +3,12 @@ import { PieChart, Pie, Sector, Cell } from "recharts";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-export default class Example extends Component {
+class TopCategoriesChart extends Component {
   render() {
     const { data } = this.props;
-
+    console.log(data);
     return (
-      <div>Top Spending Categories Chart</div>
-      /* <PieChart width={1000} height={1000}>
+      <PieChart width={1000} height={1000}>
         <Pie
           data={data}
           cx={200}
@@ -23,7 +22,9 @@ export default class Example extends Component {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-      </PieChart> */
+      </PieChart>
     );
   }
 }
+
+export default TopCategoriesChart;

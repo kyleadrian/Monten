@@ -17,24 +17,28 @@ import {
   calculateExpenses,
   topSpendCategories
 } from "../../helpers/snapshotHelper";
+import { spendDataByMonth } from "../../helpers/chartsHelper";
 
 class Snapshots extends Component {
   componentDidMount() {
     this.props.fetchTransactions();
-    console.log(this.props.isShown);
   }
 
   state = {
     dateRange: dateRanges.oneMonthAgo
   };
 
-  renderCharts() {
+  handleDateChange = date => {
+    this.setState({ dateRange: date });
+  };
+
+  renderCharts(data) {
     if (this.props.isShown.isBankInfoChartShown) {
       return <BankingInformationChart />;
     } else if (this.props.isShown.isNetSpendChartShown) {
       return <NetSpendChart />;
     } else if (this.props.isShown.isTopCategoriesChartShown) {
-      return <TopCategoriesChart />;
+      return <TopCategoriesChart data={data} />;
     }
   }
 
@@ -48,11 +52,19 @@ class Snapshots extends Component {
     const income = calculateIncome(transactions, this.state.dateRange);
     const expenses = calculateExpenses(transactions, this.state.dateRange);
     const net = income - expenses;
-
     const orderedCategories = topSpendCategories(
       transactions,
       this.state.dateRange
     );
+
+    const spendData = spendDataByMonth(transactions);
+
+    const financialData = {
+      income,
+      expenses,
+      net,
+      orderedCategories
+    };
 
     return (
       <div className="ui grid">
@@ -71,18 +83,22 @@ class Snapshots extends Component {
           </div>
           <div className="column">
             <NetSpendSnapshot
-              income={income.toLocaleString()}
-              expenses={expenses.toLocaleString()}
-              net={net}
+              income={financialData.income.toLocaleString()}
+              expenses={financialData.expenses.toLocaleString()}
+              net={financialData.net}
             />
           </div>
           <div className="column">
-            <SpendCategorySnapshot categories={orderedCategories} />
+            <SpendCategorySnapshot
+              categories={financialData.orderedCategories}
+            />
           </div>
         </div>
 
         <div>
-          <div className="column">{this.renderCharts()}</div>
+          <div className="column">
+            {this.renderCharts(financialData.orderedCategories)}
+          </div>
         </div>
       </div>
     );

@@ -11,7 +11,7 @@ import {
 
 const data = [
   {
-    name: "Page A",
+    name: "January",
     uv: 4000,
     pv: 2400,
     amt: 2400
@@ -54,13 +54,12 @@ const data = [
   }
 ];
 
-export default class Example extends Component {
+class NetSpendChart extends Component {
   render() {
     return (
-      <div>Net Spend Chart</div>
-      /* <LineChart
-        width={500}
-        height={300}
+      <LineChart
+        width={400}
+        height={250}
         data={data}
         margin={{
           top: 5,
@@ -81,7 +80,9 @@ export default class Example extends Component {
           activeDot={{ r: 8 }}
         />
         <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-      </LineChart> */
+      </LineChart>
     );
   }
 }
+
+export default NetSpendChart;

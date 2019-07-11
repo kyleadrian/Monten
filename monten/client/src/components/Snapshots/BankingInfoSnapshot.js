@@ -16,9 +16,6 @@ class BankingInfoSnapShot extends Component {
   };
 
   render() {
-    console.log(this.props.isShown.isBankInfoChartShown);
-    console.log(this.props.isShown.isNetSpendChartShown);
-    console.log(this.props.isShown.isTopCategoriesChartShown);
     return (
       <div className="ui card">
         <div className="content">

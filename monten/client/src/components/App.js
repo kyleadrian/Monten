@@ -33,7 +33,7 @@ export default () => {
               component={TransactionList}
             />
             <Route
-              path="/transactions/:id"
+              path="/transactions/detail/:id"
               exact
               component={TransactionDetail}
             />

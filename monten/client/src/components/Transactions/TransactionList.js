@@ -79,7 +79,6 @@ class TransactionList extends Component {
   handleSearchInput = event => {
     this.setState({ searchTerm: event.target.value });
     this.filterTransactions();
-    console.log(this.state.filteredTransactions);
   };
 
   filterTransactions() {
