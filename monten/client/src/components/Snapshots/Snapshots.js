@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchTransactions } from "../../actions";
 import NetSpendSnapshot from "./NetSpendSnapshot";
@@ -67,40 +67,47 @@ class Snapshots extends Component {
     };
 
     return (
-      <div className="ui grid">
-        <div className="two column row">
-          <div className="left aligned column">
-            <Greeting name={this.props.name} />
+      <Fragment>
+        <div className="ui grid">
+          <div className="two column row">
+            <div className="left aligned column">
+              <Greeting name={this.props.name} />
+            </div>
+            <div className="right aligned column">
+              <DateRange onDateRangeClick={this.handleDateChange} />
+            </div>
           </div>
-          <div className="right aligned column">
-            <DateRange onDateRangeClick={this.handleDateChange} />
+
+          <div className="three column row">
+            <div className="column">
+              <BankingInfoSnapshot />
+            </div>
+            <div className="column">
+              <NetSpendSnapshot
+                income={financialData.income.toLocaleString()}
+                expenses={financialData.expenses.toLocaleString()}
+                net={financialData.net}
+              />
+            </div>
+            <div className="column">
+              <SpendCategorySnapshot
+                categories={financialData.orderedCategories}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="column">
+              {this.renderCharts(financialData.orderedCategories)}
+            </div>
           </div>
         </div>
-
-        <div className="three column row">
-          <div className="column">
-            <BankingInfoSnapshot />
-          </div>
-          <div className="column">
-            <NetSpendSnapshot
-              income={financialData.income.toLocaleString()}
-              expenses={financialData.expenses.toLocaleString()}
-              net={financialData.net}
-            />
-          </div>
-          <div className="column">
-            <SpendCategorySnapshot
-              categories={financialData.orderedCategories}
-            />
-          </div>
-        </div>
-
         <div>
-          <div className="column">
-            {this.renderCharts(financialData.orderedCategories)}
-          </div>
+          <button class="big ui red icon button">
+            <i class="plus circle icon" />
+          </button>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

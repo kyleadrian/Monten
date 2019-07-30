@@ -12,7 +12,7 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
-// Server Configuration
+// Server Configuration // middleware
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(cors());
@@ -20,6 +20,7 @@ app.use(cors());
 // Routes
 app.use(require("./routes/authRoutes"));
 app.use(require("./routes/transactionRoutes"));
+app.use(require("./routes/uploadRoutes"));
 
 // Server Setup
 const port = process.env.PORT || 4000;
