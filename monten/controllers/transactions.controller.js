@@ -1,5 +1,6 @@
 const Transaction = require("../models/transactionsModel");
 const User = require("../models/users");
+const mongoose = require("mongoose");
 
 module.exports = {
   createTransaction,
@@ -45,6 +46,12 @@ async function createTransaction(req, res, next) {
   try {
     const newTransaction = await transaction.save();
 
+    if (mongoose.Types.ObjectId.isValid(owner)) {
+      console.log(`It is good`);
+    } else {
+      console.log(`It is not good`);
+    }
+
     await User.findOne({ _id: owner }, (err, user) => {
       user.transactions.push(newTransaction);
       user.save();
@@ -80,12 +87,16 @@ async function getTransaction(req, res, next) {
 async function getUserTransactions(req, res, next) {
   const { id } = req.user;
 
-  try {
-    const user = await User.find({ _id: id }).populate("transactions");
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    try {
+      const user = await User.findOne({ _id: id }).populate("transactions");
 
-    res.send(user[0].transactions);
-  } catch (err) {
-    res.status(422).send(err);
+      res.send(user.transactions);
+    } catch (err) {
+      res.status(422).send(err);
+    }
+  } else {
+    res.send({ message: `Invalid userId` });
   }
 }
 

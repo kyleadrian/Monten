@@ -4,6 +4,10 @@ const uuidv4 = require("uuid/v4");
 const multer = require("multer");
 const uploadRouter = express.Router();
 const uploadController = require("../controllers/upload.controller");
+const passport = require("passport");
+const passportService = require("../services/passport");
+
+const requireAuth = passport.authenticate("jwt", { session: false });
 
 const multerConfig = {
   storage: multer.diskStorage({
@@ -37,6 +41,7 @@ const upload = multer(multerConfig);
 
 uploadRouter.post(
   "/api/upload",
+  requireAuth,
   upload.single("selectedFile"),
   uploadController.upload
 );
