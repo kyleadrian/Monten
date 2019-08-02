@@ -46,16 +46,10 @@ async function createTransaction(req, res, next) {
   try {
     const newTransaction = await transaction.save();
 
-    if (mongoose.Types.ObjectId.isValid(owner)) {
-      console.log(`It is good`);
-    } else {
-      console.log(`It is not good`);
-    }
-
-    await User.findOne({ _id: owner }, (err, user) => {
+    /*     await User.findOne({ _id: owner }, (err, user) => {
       user.transactions.push(newTransaction);
       user.save();
-    });
+    }); */
 
     res.send({ newTransaction });
   } catch (err) {
@@ -89,9 +83,9 @@ async function getUserTransactions(req, res, next) {
 
   if (mongoose.Types.ObjectId.isValid(id)) {
     try {
-      const user = await User.findOne({ _id: id }).populate("transactions");
+      const transactions = await Transaction.find({ owner: id });
 
-      res.send(user.transactions);
+      res.send(transactions);
     } catch (err) {
       res.status(422).send(err);
     }

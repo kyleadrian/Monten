@@ -25,13 +25,14 @@ async function upload(req, res, next) {
     renameHeaders: true,
     ignoreEmpty: true
   });
-  const transactions = [];
+
   const owner = req.user.id;
 
   fileStream.pipe(
     stream
       .on("data", async data => {
-        const transaction = new Transaction({
+        // Staging (mapping) the data
+        const transactionObject = {
           date: data.date,
           description: data.description,
           originalDescription: data.originalDescription,
@@ -40,16 +41,12 @@ async function upload(req, res, next) {
           category: data.category,
           accountName: data.accountName,
           owner
-        });
+        };
+
+        const transaction = new Transaction(transactionObject);
 
         try {
-          const newTransaction = await transaction.save();
-          transactions.push(newTransaction);
-
-          await User.findOne({ _id: owner }, async (err, user) => {
-            await user.transactions.push(newTransaction);
-            await user.save();
-          });
+          await transaction.save();
         } catch (err) {
           res.status(422).send(err);
         }

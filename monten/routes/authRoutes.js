@@ -6,6 +6,7 @@ const authenticationController = require("../controllers/authentication.controll
 
 // Set up passport middelware
 const requireSignIn = passport.authenticate("local", { session: false });
+const requireAuth = passport.authenticate("jwt", { session: false });
 
 // Sign Up Route
 authRouter.post("/api/signup", authenticationController.signup);

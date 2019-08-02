@@ -7,8 +7,7 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   email: { type: String, unique: true, lowercase: true },
-  password: String,
-  transactions: [{ type: Schema.Types.ObjectId, ref: "transaction" }]
+  password: String
 });
 
 userSchema.pre("save", async function(next) {
@@ -25,7 +24,6 @@ userSchema.pre("save", async function(next) {
       }
 
       user.password = hash;
-
       next();
     });
   });
