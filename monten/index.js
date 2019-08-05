@@ -21,6 +21,7 @@ app.use(cors());
 app.use(require("./routes/authRoutes"));
 app.use(require("./routes/transactionRoutes"));
 app.use(require("./routes/uploadRoutes"));
+app.use(require("./routes/snapshotRoutes"));
 
 // Server Setup
 const port = process.env.PORT || 4000;
