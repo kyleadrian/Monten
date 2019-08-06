@@ -47,7 +47,9 @@ userSchema.methods.comparePassword = function(candidatePassword, callback) {
 
 userSchema.methods.calculateIncome = function(
   transactions,
-  selectedMonth = ""
+  selectedMonth = moment()
+    .subtract(1, "months")
+    .format("MMM")
 ) {
   const income = _.chain(transactions)
     .filter(transaction => {
@@ -69,7 +71,9 @@ userSchema.methods.calculateIncome = function(
 
 userSchema.methods.calculateExpenses = function(
   transactions,
-  selectedMonth = ""
+  selectedMonth = moment()
+    .subtract(1, "months")
+    .format("MMM")
 ) {
   const totalSpent = _.chain(transactions)
     .reject(transaction => {
@@ -118,6 +122,16 @@ userSchema.methods.topSpendCategories = function(
   const categorizedTransactions = Object.keys(groupedTransactions).map(key => {
     const categories = {
       month: `${key} ${new Date().getFullYear()}`,
+      // This reduce function takes two arguements, the totalAmount and the categoryInfo object
+      // The reduce method is going to cycle through the categoryInfo array much like it would in a regular for loop
+      // When the loop starts our initial value, totalAmount must be an empty object
+      // We first check to see if our totalAmount contains a key with the category of the current categoryInfo object,
+      // If it doesn't then we create it by setting the category to the current category and set the amount to 0.
+      // If it does, we then add the amount of the current categoryInfo object to the amount of the totalAmount object.
+
+      // Effectively there a two checks:
+      // 1) Check whether or not the current object key is accounted for, if not, push it to an array.
+      // 2) For any subsequent occurences of the object key, increase the selected value, in this case, ammount by the value for that key.
       total: groupedTransactions[key].reduce((totalAmount, { amount }) => {
         return totalAmount + amount;
       }, 0),
@@ -155,74 +169,6 @@ userSchema.methods.topSpendCategories = function(
   } else {
     return categorizedTransactions;
   }
-
-  /* console.log(
-    groupedTransactions.Jan.reduce(
-      (totalAmount, { category, amount }) => {
-        if (!totalAmount[category]) {
-          totalAmount[category] = {
-            amount: 0,
-            transactions: 1
-          };
-        }
-
-        totalAmount[category].amount += amount;
-        totalAmount[category].transactions += 1;
-
-        return totalAmount;
-      }
-    )
-  ); */
-
-  /*  const test = _.chain(groupedTransactions)
-    .reduce((totalAmount, { category, amount, date }) => {
-      if (!totalAmount[category]) {
-        totalAmount[category] = { category: category, amount: 0, date: date };
-        categoryAmount.push(totalAmount[category]); // This will only happen once.
-      }
-      totalAmount[category].amount += amount;
-
-      return totalAmount;
-    }, {})
-    .value(); */
-
-  /* console.log(
-    Object.keys(groupedTransactions).forEach((key, totalAmount) => {
-      console.log({
-        month: `${key}`,
-        amount: `placeholder`,
-        transactions: groupedTransactions[key].length
-      });
-    })
-  ); */
-
-  /* _.chain(categoryInfo)
-    // This reduce function takes two arguements, the totalAmount and the categoryInfo object
-    // The reduce method is going to cycle through the categoryInfo array much like it would in a regular for loop
-    // When the loop starts our initial value, totalAmount must be an empty object
-    // We first check to see if our totalAmount contains a key with the category of the current categoryInfo object,
-    // If it doesn't then we create it by setting the category to the current category and set the amount to 0.
-    // If it does, we then add the amount of the current categoryInfo object to the amount of the totalAmount object.
-
-    // Effectively there a two checks:
-    // 1) Check whether or not the current object key is accounted for, if not, push it to an array.
-    // 2) For any subsequent occurences of the object key, increase the selected value, in this case, ammount by the value for that key.
-    .reduce((totalAmount, { category, amount, date }) => {
-      if (!totalAmount[category]) {
-        totalAmount[category] = { category: category, amount: 0, date: date };
-        categoryAmount.push(totalAmount[category]); // This will only happen once.
-      }
-      totalAmount[category].amount += amount;
-
-      return totalAmount;
-    }, {})
-    .value();
-
-  const sortedAmount = _.chain(categoryAmount)
-    .orderBy("amount", "desc")
-    .value();
-
-  return sortedAmount; */
 };
 
 // Create the model in mongoose
@@ -230,66 +176,3 @@ const userModel = mongoose.model("user", userSchema);
 
 // Export the model
 module.exports = userModel;
-
-/* const date = [
-  {
-    Aug2019: {
-      "Business Services": {
-        amount: `$950`,
-        transactions: 19
-      },
-      "Alcohol & Bars": {
-        amount: `$120`,
-        transactions: 4
-      }
-    }
-  },
-  {
-    Sep2019: {
-      "Business Services": {
-        amount: `$450`,
-        transactions: 19
-      },
-      "Alchol & Bars": {
-        amount: `$130`,
-        transactions: 4
-      }
-    }
-  }
-]; */
-
-/*  .reduce((totalAmount, { category, amount, date }) => {
-    if (!totalAmount[category]) {
-      totalAmount[category] = { category: category, amount: 0, date: date };
-      categoryAmount.push(totalAmount[category]); // This will only happen once.
-    }
-    totalAmount[category].amount += amount;
-
-    return totalAmount;
-  }, {}) */
-
-/* userSchema.methods.topSpendCategories = function (transactions) {
-  const categoryInfo = [];
-  const categoryAmount = [];
-
-  _.chain(transactions)
-    .reject(({ category }) => {
-      // consider making the below an array to tighten up code and make more scalable. FOr instance if user is filtering, category can get pushed to array to exclude
-      if (
-        category === "Credit Card Payment" ||
-        category === "Transfer" ||
-        category === "ATM Fee" ||
-        category === "Paycheck" ||
-        category === "Income"
-      ) {
-        return category;
-      }
-    })
-    .sortBy("category")
-    .forEach(({ category, amount, date }) => {
-      categoryInfo.push({ category, amount, date });
-    })
-    .value();
-
-  _.chain(categoryInfo)
-} */

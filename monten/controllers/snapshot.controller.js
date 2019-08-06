@@ -9,8 +9,8 @@ async function getUserSnapshot(req, res, next) {
   const owner = req.user.id;
   const user = await User.findById(owner);
   const userTransactions = await Transaction.find({ owner });
-  const income = user.calculateIncome(userTransactions, "Jul");
-  const expenses = user.calculateExpenses(userTransactions, "Jul");
+  const income = user.calculateIncome(userTransactions);
+  const expenses = user.calculateExpenses(userTransactions);
   const categories = user.topSpendCategories(userTransactions);
 
   const userObject = {
