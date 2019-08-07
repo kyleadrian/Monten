@@ -3,6 +3,7 @@ import { reducer as formReducer } from "redux-form";
 import transactionReducer from "./transactionReducer";
 import authReducer from "./authReducer";
 import chartReducer from "./chartReducer";
+import snapshotReducer from "./snapshotReducer";
 
 export default combineReducers({
   transactions: transactionReducer,
@@ -10,5 +11,6 @@ export default combineReducers({
   // DON"T FORGET WHEN USING REDUX FORM TO IMPORT FORM REDUCER OTHERWISE YOU WON"T BE ABLE TO TYPE
   // IN THE FIELDS!!!
   form: formReducer,
-  charts: chartReducer
+  charts: chartReducer,
+  snapshot: snapshotReducer
 });

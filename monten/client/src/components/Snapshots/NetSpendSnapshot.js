@@ -16,6 +16,8 @@ class NetSpendSnapshot extends Component {
   };
 
   render() {
+    const { income, expenses, net } = this.props.netSpendInfo;
+
     return (
       <Fragment>
         <div className="ui card">
@@ -30,13 +32,13 @@ class NetSpendSnapshot extends Component {
             </div>
           </div>
           <div className="content">
-            <h4 className="ui sub header">Income: ${this.props.income}</h4>
-            <h4 className="ui sub header">Spent: ${this.props.expenses}</h4>
+            <h4 className="ui sub header">Income: ${income}</h4>
+            <h4 className="ui sub header">Spent: ${expenses}</h4>
             <h4
               className="ui sub header"
-              style={{ color: `${this.props.net < 0 ? "red" : "green"}` }}
+              style={{ color: `${net < 0 ? "red" : "green"}` }}
             >
-              Net: ${this.props.net} $
+              Net: ${net}
             </h4>
           </div>
         </div>

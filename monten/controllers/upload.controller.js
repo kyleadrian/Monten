@@ -32,10 +32,11 @@ async function upload(req, res, next) {
     stream
       .on("data", async data => {
         // Staging (mapping) the data
+
         const transactionObject = {
           date: data.date,
-          description: data.description,
-          originalDescription: data.originalDescription,
+          merchant: data.description.toLowerCase(),
+          description: data.originalDescription.toLowerCase(),
           amount: data.amount,
           transactionType: data.transactionType,
           category: data.category,

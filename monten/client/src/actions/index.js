@@ -1,6 +1,7 @@
 import axios from "../apis/axios";
 
 import {
+  FETCH_SNAPSHOT,
   FETCH_TRANSACTIONS,
   FETCH_TRANSACTION,
   AUTH_USER,
@@ -10,6 +11,12 @@ import {
   SHOW_NETSPENDCHART,
   SHOW_TOPCATEGORIESCHART
 } from "./types";
+
+export const fetchSnapshot = () => async dispatch => {
+  const response = await axios.get("/api/snapshot");
+
+  dispatch({ type: FETCH_SNAPSHOT, payload: response.data });
+};
 
 export const fetchTransactions = () => async dispatch => {
   const response = await axios.get("/api/transactions");

@@ -98,7 +98,9 @@ userSchema.methods.calculateExpenses = function(
 
 userSchema.methods.topSpendCategories = function(
   transactions,
-  selectedMonth = ""
+  selectedMonth = moment()
+    .subtract(1, "months")
+    .format("MMM")
 ) {
   const groupedTransactions = _.chain(transactions)
     .reject(({ category }) => {
@@ -114,12 +116,17 @@ userSchema.methods.topSpendCategories = function(
       }
     })
     .map(({ category, amount, date }) => {
-      return { category, amount, month: moment(date).format("MMM") };
+      return {
+        category,
+        amount,
+        month: moment(date).format("MMM")
+      };
     })
     .groupBy("month")
     .value();
 
   const categorizedTransactions = Object.keys(groupedTransactions).map(key => {
+    const test = [];
     const categories = {
       month: `${key} ${new Date().getFullYear()}`,
       // This reduce function takes two arguements, the totalAmount and the categoryInfo object
@@ -135,10 +142,11 @@ userSchema.methods.topSpendCategories = function(
       total: groupedTransactions[key].reduce((totalAmount, { amount }) => {
         return totalAmount + amount;
       }, 0),
-      categories: groupedTransactions[key].reduce(
-        (totalAmount, { category, month, amount }) => {
+      categories: _.chain(groupedTransactions[key])
+        .reduce((totalAmount, { category, month, amount }) => {
           if (!totalAmount[category]) {
             totalAmount[category] = {
+              category: category,
               amount: 0,
               transactions: 1
             };
@@ -148,9 +156,10 @@ userSchema.methods.topSpendCategories = function(
           totalAmount[category].transactions += 1;
 
           return totalAmount;
-        },
-        {}
-      )
+        }, {})
+        .values()
+        .orderBy("amount", "desc")
+        .value()
     };
 
     return categories;
@@ -176,3 +185,35 @@ const userModel = mongoose.model("user", userSchema);
 
 // Export the model
 module.exports = userModel;
+
+/* groupedTransactions[key].reduce((totalAmount, { category, month, amount }) => {
+  if (!totalAmount[category]) {
+    totalAmount[category] = {
+      amount: 0,
+      transactions: 1
+    };
+  }
+
+  totalAmount[category].amount += amount;
+  totalAmount[category].transactions += 1;
+
+  return totalAmount;
+}, {}); */
+
+/* categories: _.chain(groupedTransactions[key])
+  .orderBy("amount", "desc")
+  .reduce((totalAmount, { category, month, amount }) => {
+    if (!totalAmount[category]) {
+      totalAmount[category] = {
+        amount: 0,
+        transactions: 1
+      };
+    }
+
+    totalAmount[category].amount += amount;
+    totalAmount[category].transactions += 1;
+
+    return totalAmount;
+  }, {})
+  .value()
+    }; */

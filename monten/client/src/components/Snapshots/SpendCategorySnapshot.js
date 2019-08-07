@@ -17,16 +17,18 @@ class SpendCategorySnapshot extends Component {
   };
 
   renderCategories = () => {
-    const categories = [...this.props.categories];
+    const { categoryInfo } = this.props;
 
-    return categories.splice(0, 3).map((transaction, index) => {
-      return (
-        <h4 className="ui sub header" key={transaction.category}>
-          <Link to={`/transactions/${transaction.category}`}>
-            {1 + index++}: {transaction.category}
-          </Link>
-        </h4>
-      );
+    return categoryInfo.map(month => {
+      return month.categories.splice(0, 5).map((category, index) => {
+        return (
+          <h4 className="ui sub header" key={category.category}>
+            <Link to={`/transactions/${category.category}`}>
+              {1 + index++}: {category.category}
+            </Link>
+          </h4>
+        );
+      });
     });
   };
 

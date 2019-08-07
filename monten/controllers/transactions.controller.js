@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 
 module.exports = {
   createTransaction,
-  getAllTransactions,
   getTransaction,
   updateTransactionCategory,
   getUserTransactions
@@ -57,7 +56,7 @@ async function createTransaction(req, res, next) {
   }
 }
 
-async function getAllTransactions(req, res, next) {
+/* async function getAllTransactions(req, res, next) {
   try {
     const transactions = await Transaction.find({});
 
@@ -65,7 +64,7 @@ async function getAllTransactions(req, res, next) {
   } catch (err) {
     res.status(422).send(err);
   }
-}
+} */
 
 async function getTransaction(req, res, next) {
   const { transactionId } = req.params;

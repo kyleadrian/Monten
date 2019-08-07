@@ -4,8 +4,8 @@ const { Schema } = mongoose;
 const transactionSchema = new Schema({
   owner: { type: Schema.Types.ObjectId, ref: "user" }, // linking a transaction to a specific user.
   date: String,
+  merchant: String,
   description: String,
-  originalDescription: String,
   amount: Number,
   transactionType: String,
   category: String,
