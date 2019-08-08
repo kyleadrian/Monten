@@ -15,30 +15,36 @@ class BankingInfoSnapShot extends Component {
     }
   };
 
-  render() {
-    const {
-      checkingAcctBalance,
-      savingsAcctBalance,
-      investmentAcctBalance
-    } = this.props.bankInfo;
+  formatNames(value) {
+    switch (value) {
+      case "checkingAcctBalance":
+        return "Checking";
+      case "savingsAcctBalance":
+        return "Savings";
+      case "investmentAcctBalance":
+        return "Investments";
+      default:
+        return "null";
+    }
+  }
 
+  renderBankInfo() {
+    return Object.entries(this.props.bankInfo).map(value => {
+      return (
+        <h4 key={value[0]} className="ui sub header">
+          {this.formatNames(value[0])}: ${value[1]}
+        </h4>
+      );
+    });
+  }
+
+  render() {
     return (
       <div className="ui card">
         <div className="content">
-          <div
-            className="header"
-            onClick={() => this.handleShowBankingInfoChart()}
-          >
-            Banking Information
-          </div>
+          <div className="header">Banking Information</div>
         </div>
-        <div className="content">
-          <h4 className="ui sub header">Checking: ${checkingAcctBalance}</h4>
-          <h4 className="ui sub header">Savings: ${savingsAcctBalance}</h4>
-          <h4 className="ui sub header">
-            Investments: ${investmentAcctBalance}
-          </h4>
-        </div>
+        <div className="content">{this.renderBankInfo()}</div>
       </div>
     );
   }

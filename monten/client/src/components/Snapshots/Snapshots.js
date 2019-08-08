@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { fetchSnapshot } from "../../actions";
+import { fetchSnapshot, uploadFile, selectFile } from "../../actions";
 import NetSpendSnapshot from "./NetSpendSnapshot";
 import SpendCategorySnapshot from "./SpendCategorySnapshot";
 import BankingInfoSnapshot from "./BankingInfoSnapshot";
@@ -11,7 +11,6 @@ import TopCategoriesChart from "../Charts/TopCategoriesChart";
 import NetSpendChart from "../Charts/NetSpendChart";
 import BankingInformationChart from "../Charts/BankingInformationChart";
 import requireAuth from "../../requireAuth";
-import { dateRanges } from "../../helpers/dateRangesHelper";
 import { spendDataByMonth } from "../../helpers/chartsHelper";
 
 class Snapshots extends Component {
@@ -19,15 +18,21 @@ class Snapshots extends Component {
     this.props.fetchSnapshot();
   }
 
-  state = {
-    dateRange: dateRanges.oneMonthAgo
-  };
-
-  handleDateChange = date => {
+  /*   handleDateChange = date => {
     this.setState({ dateRange: date });
+  }; */
+
+  onChange = e => {
+    const selectedFile = e.target.files[0];
+    this.props.selectFile(selectedFile);
+
+    const formData = new FormData();
+    formData.append("selectedFile", selectedFile);
+
+    this.props.uploadFile(formData);
   };
 
-  renderCharts(data) {
+  /*   renderCharts(data) {
     if (this.props.isShown.isBankInfoChartShown) {
       return <BankingInformationChart />;
     } else if (this.props.isShown.isNetSpendChartShown) {
@@ -35,13 +40,16 @@ class Snapshots extends Component {
     } else if (this.props.isShown.isTopCategoriesChartShown) {
       return <TopCategoriesChart data={data} />;
     }
-  }
+  } */
 
   render() {
     const { netSpendInfo, bankInfo, categoryInfo, name } = this.props.snapshot;
+    const { uploading } = this.props.upload;
 
-    if (!netSpendInfo) {
-      return <Spinner sectionName={"Snapshots"} />;
+    if (!categoryInfo) {
+      return <Spinner message={"Loading Snapshots"} />;
+    } else if (uploading) {
+      return <Spinner message={"Uploading Transactions"} />;
     }
     // SUPER SUPER IMPORTANT - DON"T START CALLING ANY LOGIC UNTIL THE ASYNC CALLS ARE FINISHED!
     return (
@@ -52,7 +60,7 @@ class Snapshots extends Component {
               <Greeting name={name} />
             </div>
             <div className="right aligned column">
-              <DateRange onDateRangeClick={this.handleDateChange} />
+              <DateRange />
             </div>
           </div>
 
@@ -69,16 +77,21 @@ class Snapshots extends Component {
               />
             </div>
           </div>
-
+          <label for="file" class="big ui red icon button">
+            <i class="plus circle icon" />
+          </label>
+          <input
+            type="file"
+            id="file"
+            name="selectedFile"
+            onChange={this.onChange}
+            style={{ display: "none" }}
+          />
           <div>
             <div className="column" />
           </div>
         </div>
-        <div>
-          <button class="big ui red icon button">
-            <i class="plus circle icon" />
-          </button>
-        </div>
+        <div />
       </Fragment>
     );
   }
@@ -87,11 +100,12 @@ class Snapshots extends Component {
 const mapStateToProps = state => {
   return {
     isShown: state.charts,
-    snapshot: state.snapshot
+    snapshot: state.snapshot,
+    upload: state.upload
   };
 };
 
 export default connect(
   mapStateToProps,
-  { fetchSnapshot }
+  { fetchSnapshot, uploadFile, selectFile }
 )(requireAuth(Snapshots));

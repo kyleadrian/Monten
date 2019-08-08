@@ -4,6 +4,7 @@ import transactionReducer from "./transactionReducer";
 import authReducer from "./authReducer";
 import chartReducer from "./chartReducer";
 import snapshotReducer from "./snapshotReducer";
+import uploadsReducer from "./uploadsReducer";
 
 export default combineReducers({
   transactions: transactionReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   // IN THE FIELDS!!!
   form: formReducer,
   charts: chartReducer,
-  snapshot: snapshotReducer
+  snapshot: snapshotReducer,
+  upload: uploadsReducer
 });

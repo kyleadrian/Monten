@@ -56,7 +56,10 @@ async function upload(req, res, next) {
         res.status(422).send(error);
       })
       .on("end", rowCount => {
-        res.send({ message: `Succesfully added ${rowCount} new transactions` });
+        res.send({
+          success: true,
+          message: `Succesfully added ${rowCount} new transactions`
+        });
       })
   );
 }

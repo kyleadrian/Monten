@@ -24,9 +24,9 @@ async function getUserSnapshot(req, res, next) {
       investmentAcctBalance: `113,274.67`
     },
     netSpendInfo: {
-      income: `${income}`,
-      expenses: `${expenses}`,
-      net: `${income - expenses}`
+      income,
+      expenses,
+      net: income - expenses
     },
     categoryInfo: user.topSpendCategories(userTransactions, month)
   };

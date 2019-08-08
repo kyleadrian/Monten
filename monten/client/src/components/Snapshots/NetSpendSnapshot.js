@@ -7,6 +7,10 @@ import {
 } from "../../actions";
 
 class NetSpendSnapshot extends Component {
+  formatAmount = number => {
+    return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  };
+
   handleShowNetSpendChart = () => {
     if (!this.props.isShown.isNetSpendChartShown) {
       this.props.showNetSpendChart(true);
@@ -15,32 +19,24 @@ class NetSpendSnapshot extends Component {
     }
   };
 
-  render() {
-    const { income, expenses, net } = this.props.netSpendInfo;
+  renderNetSpend() {
+    return Object.entries(this.props.netSpendInfo).map(value => {
+      return (
+        <h4 key={value[0]} className="ui sub header">
+          {value[0]}: ${this.formatAmount(value[1])}
+        </h4>
+      );
+    });
+  }
 
+  render() {
     return (
       <Fragment>
         <div className="ui card">
           <div className="content">
-            <div
-              className="header"
-              onClick={() => {
-                this.handleShowNetSpendChart();
-              }}
-            >
-              Net Spend
-            </div>
+            <div className="header">Net Spend</div>
           </div>
-          <div className="content">
-            <h4 className="ui sub header">Income: ${income}</h4>
-            <h4 className="ui sub header">Spent: ${expenses}</h4>
-            <h4
-              className="ui sub header"
-              style={{ color: `${net < 0 ? "red" : "green"}` }}
-            >
-              Net: ${net}
-            </h4>
-          </div>
+          <div className="content">{this.renderNetSpend()}</div>
         </div>
       </Fragment>
     );

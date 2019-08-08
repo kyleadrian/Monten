@@ -1,6 +1,8 @@
 import axios from "../apis/axios";
 
 import {
+  UPLOAD_FILE,
+  SELECT_FILE,
   FETCH_SNAPSHOT,
   FETCH_TRANSACTIONS,
   FETCH_TRANSACTION,
@@ -11,6 +13,19 @@ import {
   SHOW_NETSPENDCHART,
   SHOW_TOPCATEGORIESCHART
 } from "./types";
+
+export const selectFile = () => async dispatch => {
+  dispatch({
+    type: SELECT_FILE,
+    payload: { uploading: true }
+  });
+};
+
+export const uploadFile = selectedFile => async dispatch => {
+  const response = await axios.post("/api/upload", selectedFile);
+
+  dispatch({ type: UPLOAD_FILE, payload: response.data });
+};
 
 export const fetchSnapshot = () => async dispatch => {
   const response = await axios.get("/api/snapshot");

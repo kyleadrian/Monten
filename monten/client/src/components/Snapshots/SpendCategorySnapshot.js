@@ -20,15 +20,17 @@ class SpendCategorySnapshot extends Component {
     const { categoryInfo } = this.props;
 
     return categoryInfo.map(month => {
-      return month.categories.splice(0, 5).map((category, index) => {
-        return (
-          <h4 className="ui sub header" key={category.category}>
-            <Link to={`/transactions/${category.category}`}>
-              {1 + index++}: {category.category}
-            </Link>
-          </h4>
-        );
-      });
+      return month.categories
+        .splice(0, 5)
+        .map(({ category, amount }, index) => {
+          return (
+            <h4 className="ui sub header" key={category}>
+              {1 + index++}:
+              <Link to={`/transactions/${category}`}> {category}</Link>- $
+              {amount.toFixed(2)}
+            </h4>
+          );
+        });
     });
   };
 
@@ -36,9 +38,7 @@ class SpendCategorySnapshot extends Component {
     return (
       <div className="ui card">
         <div className="content">
-          <div className="header" onClick={this.handleShowTopCategoriesChart}>
-            Top Spending Categories
-          </div>
+          <div className="header">Top Spending Categories</div>
         </div>
         <div className="content">{this.renderCategories()}</div>
       </div>

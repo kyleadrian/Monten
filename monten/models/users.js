@@ -66,7 +66,7 @@ userSchema.methods.calculateIncome = function(
     .ceil()
     .value();
 
-  return income;
+  return Number(income);
 };
 
 userSchema.methods.calculateExpenses = function(
@@ -93,7 +93,7 @@ userSchema.methods.calculateExpenses = function(
     .ceil()
     .value();
 
-  return totalSpent;
+  return Number(totalSpent);
 };
 
 userSchema.methods.topSpendCategories = function(

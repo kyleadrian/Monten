@@ -32,7 +32,7 @@ const multerConfig = {
     } else {
       //super important to know what with middleware some will serve the file or some will
       // pass it on to the router. In which case you will have to handle it yourself.
-      next({ message: "File type not supported" }, false);
+      next({ message: "Wrong file type" }, false);
     }
   }
 };
