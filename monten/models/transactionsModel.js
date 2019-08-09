@@ -9,6 +9,7 @@ const transactionSchema = new Schema({
   amount: Number,
   transactionType: String,
   category: String,
+  subCategory: String,
   accountName: String
 });
 
