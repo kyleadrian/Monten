@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const bcrypt = require("bcrypt-nodejs");
 const _ = require("lodash");
 const moment = require("moment");
+const filter = require("../ml/filters");
 
 // Define model or "framework" for the model
 const userSchema = new Schema({
@@ -52,17 +53,14 @@ userSchema.methods.calculateIncome = function(
     .format("MMM")
 ) {
   const income = _.chain(transactions)
-    .filter(transaction => {
+    .filter(({ subCategory, date, amount }) => {
       if (
-        transaction.category === "Paycheck" &&
-        moment(transaction.date).format("MMM") === selectedMonth
+        subCategory === "Paycheck" &&
+        moment(date).format("MMM") === selectedMonth
       )
-        return transaction;
+        return amount;
     })
-    .map(transaction => {
-      return transaction.amount;
-    })
-    .sum()
+    .sumBy("amount")
     .ceil()
     .value();
 
@@ -76,20 +74,19 @@ userSchema.methods.calculateExpenses = function(
     .format("MMM")
 ) {
   const totalSpent = _.chain(transactions)
-    .reject(transaction => {
-      if (
-        transaction.category === "Credit Card Payment" ||
-        transaction.category === "Transfer"
-      ) {
-        return transaction;
+    .filter(({ category, merchant, amount, date }) => {
+      if (moment(date).format("MMM") === selectedMonth) {
+        if (
+          !(
+            category === "Non Spending" &&
+            filter.nonSpendTransfers().includes(merchant)
+          )
+        ) {
+          return amount;
+        }
       }
     })
-    .map(transaction => {
-      if (moment(transaction.date).format("MMM") === selectedMonth) {
-        return transaction.amount;
-      }
-    })
-    .sum()
+    .sumBy("amount")
     .ceil()
     .value();
 
@@ -103,14 +100,12 @@ userSchema.methods.topSpendCategories = function(
     .format("MMM")
 ) {
   const groupedTransactions = _.chain(transactions)
-    .reject(({ category }) => {
-      // consider making the below an array to tighten up code and make more scalable. FOr instance if user is filtering, category can get pushed to array to exclude
+    .filter(({ category, merchant }) => {
       if (
-        category === "Credit Card Payment" ||
-        category === "Transfer" ||
-        category === "ATM Fee" ||
-        category === "Paycheck" ||
-        category === "Income"
+        !(
+          category === "Non Spending" &&
+          filter.nonSpendTransfers().includes(merchant)
+        )
       ) {
         return category;
       }
@@ -126,24 +121,13 @@ userSchema.methods.topSpendCategories = function(
     .value();
 
   const categorizedTransactions = Object.keys(groupedTransactions).map(key => {
-    const test = [];
     const categories = {
       month: `${key} ${new Date().getFullYear()}`,
-      // This reduce function takes two arguements, the totalAmount and the categoryInfo object
-      // The reduce method is going to cycle through the categoryInfo array much like it would in a regular for loop
-      // When the loop starts our initial value, totalAmount must be an empty object
-      // We first check to see if our totalAmount contains a key with the category of the current categoryInfo object,
-      // If it doesn't then we create it by setting the category to the current category and set the amount to 0.
-      // If it does, we then add the amount of the current categoryInfo object to the amount of the totalAmount object.
-
-      // Effectively there a two checks:
-      // 1) Check whether or not the current object key is accounted for, if not, push it to an array.
-      // 2) For any subsequent occurences of the object key, increase the selected value, in this case, ammount by the value for that key.
       total: groupedTransactions[key].reduce((totalAmount, { amount }) => {
         return totalAmount + amount;
       }, 0),
       categories: _.chain(groupedTransactions[key])
-        .reduce((totalAmount, { category, month, amount }) => {
+        .reduce((totalAmount, { category, amount }) => {
           if (!totalAmount[category]) {
             totalAmount[category] = {
               category: category,
@@ -185,35 +169,3 @@ const userModel = mongoose.model("user", userSchema);
 
 // Export the model
 module.exports = userModel;
-
-/* groupedTransactions[key].reduce((totalAmount, { category, month, amount }) => {
-  if (!totalAmount[category]) {
-    totalAmount[category] = {
-      amount: 0,
-      transactions: 1
-    };
-  }
-
-  totalAmount[category].amount += amount;
-  totalAmount[category].transactions += 1;
-
-  return totalAmount;
-}, {}); */
-
-/* categories: _.chain(groupedTransactions[key])
-  .orderBy("amount", "desc")
-  .reduce((totalAmount, { category, month, amount }) => {
-    if (!totalAmount[category]) {
-      totalAmount[category] = {
-        amount: 0,
-        transactions: 1
-      };
-    }
-
-    totalAmount[category].amount += amount;
-    totalAmount[category].transactions += 1;
-
-    return totalAmount;
-  }, {})
-  .value()
-    }; */

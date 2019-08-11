@@ -9,9 +9,18 @@ async function getUserSnapshot(req, res, next) {
   const owner = req.user.id;
   const month = req.params.month;
   const user = await User.findById(owner);
-  const userTransactions = await Transaction.find({ owner });
-  const income = user.calculateIncome(userTransactions, month);
-  const expenses = user.calculateExpenses(userTransactions, month);
+  const userCredits = await Transaction.find({
+    owner,
+    transactionType: "credit"
+  });
+  const userDebits = await Transaction.find({
+    owner,
+    transactionType: "debit"
+  });
+
+  const income = user.calculateIncome(userCredits, month);
+  const expenses = user.calculateExpenses(userDebits, month);
+  const categoryInfo = user.topSpendCategories(userDebits, month);
 
   const userObject = {
     firstName: `${user.firstName}`,
@@ -19,16 +28,16 @@ async function getUserSnapshot(req, res, next) {
     fullName: `${user.fullName}`,
     userId: `${user._id}`,
     bankInfo: {
-      checkingAcctBalance: `12,345.64`,
-      savingsAcctBalance: `43,569.12`,
-      investmentAcctBalance: `113,274.67`
+      checkingAcctBalance: `1234564`,
+      savingsAcctBalance: `4356912`,
+      investmentAcctBalance: `11327467`
     },
     netSpendInfo: {
       income,
       expenses,
       net: income - expenses
     },
-    categoryInfo: user.topSpendCategories(userTransactions, month)
+    categoryInfo
   };
 
   res.send(userObject);
