@@ -37,7 +37,7 @@ const multerConfig = {
   }
 };
 
-const upload = multer(multerConfig);
+const upload = multer(multerConfig); // these are the options you pass to the middleware
 
 uploadRouter.post(
   "/api/upload",

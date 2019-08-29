@@ -28,15 +28,15 @@ class BankingInfoSnapShot extends Component {
     }
   }
 
-  renderBankInfo() {
+  renderBankInfo = () => {
     return Object.entries(this.props.bankInfo).map(value => {
       return (
         <h4 key={value[0]} className="ui sub header">
-          {this.formatNames(value[0])}: ${value[1]}
+          {this.formatNames(value[0])}: ${value[1] / 100}
         </h4>
       );
     });
-  }
+  };
 
   render() {
     return (

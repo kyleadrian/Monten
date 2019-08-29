@@ -16,6 +16,7 @@ class TransactionItem extends Component {
       </React.Fragment>
     );
   };
+
   render() {
     return (
       <tr>

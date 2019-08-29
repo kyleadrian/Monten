@@ -10,7 +10,7 @@ class TransactionDetail extends Component {
     this.props.fetchTransaction(this.props.match.params.id);
   }
 
-  renderContent() {
+  renderContent = () => {
     const { date } = this.props.transaction;
     const { description } = this.props.transaction;
     const { category } = this.props.transaction;
@@ -31,9 +31,9 @@ class TransactionDetail extends Component {
         {`Amount: ${amount}`}
       </div>
     );
-  }
+  };
 
-  renderActions() {
+  renderActions = () => {
     return (
       <React.Fragment>
         <button className="ui button primary">Edit Transaction</button>
@@ -42,7 +42,7 @@ class TransactionDetail extends Component {
         </Link>
       </React.Fragment>
     );
-  }
+  };
 
   render() {
     return (

@@ -98,7 +98,7 @@ class TransactionList extends Component {
     this.setState({ filteredTransactions });
   }
 
-  renderAllTransactions() {
+  renderAllTransactions = () => {
     if (this.props.match.params.category) {
       const { filteredTransactions } = this.state;
 
@@ -134,9 +134,9 @@ class TransactionList extends Component {
         );
       }
     );
-  }
+  };
 
-  renderFilteredTransactions() {
+  renderFilteredTransactions = () => {
     const { filteredTransactions } = this.state;
 
     if (filteredTransactions.length === 0) {
@@ -157,7 +157,7 @@ class TransactionList extends Component {
         );
       }
     );
-  }
+  };
 
   render() {
     const totalTransactions = this.props.transactions.length;

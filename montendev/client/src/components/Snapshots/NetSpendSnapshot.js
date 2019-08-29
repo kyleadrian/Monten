@@ -5,12 +5,9 @@ import {
   showNetSpendChart,
   showTopCategoriesChart
 } from "../../actions";
+import { formatAmount } from "../../helpers/formatter";
 
 class NetSpendSnapshot extends Component {
-  formatAmount = number => {
-    return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-  };
-
   handleShowNetSpendChart = () => {
     if (!this.props.isShown.isNetSpendChartShown) {
       this.props.showNetSpendChart(true);
@@ -19,15 +16,15 @@ class NetSpendSnapshot extends Component {
     }
   };
 
-  renderNetSpend() {
+  renderNetSpend = () => {
     return Object.entries(this.props.netSpendInfo).map(value => {
       return (
         <h4 key={value[0]} className="ui sub header">
-          {value[0]}: ${this.formatAmount(value[1])}
+          {value[0]}: ${formatAmount(value[1] / 100)}
         </h4>
       );
     });
-  }
+  };
 
   render() {
     return (

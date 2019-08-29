@@ -6,6 +6,7 @@ import {
   showNetSpendChart,
   showTopCategoriesChart
 } from "../../actions";
+import { formatAmount } from "../../helpers/formatter";
 
 class SpendCategorySnapshot extends Component {
   handleShowTopCategoriesChart = () => {
@@ -20,17 +21,15 @@ class SpendCategorySnapshot extends Component {
     const { categoryInfo } = this.props;
 
     return categoryInfo.map(month => {
-      return month.categories
-        .splice(0, 5)
-        .map(({ category, amount }, index) => {
-          return (
-            <h4 className="ui sub header" key={category}>
-              {1 + index++}:
-              <Link to={`/transactions/${category}`}> {category}</Link>- $
-              {amount.toFixed(2)}
-            </h4>
-          );
-        });
+      return month.categories.map(({ category, amount }, index) => {
+        return (
+          <h4 className="ui sub header" key={category}>
+            {1 + index++}:
+            <Link to={`/transactions/${category}`}> {category}</Link>- $
+            {formatAmount(amount.toFixed(2) / 100)}
+          </h4>
+        );
+      });
     });
   };
 
